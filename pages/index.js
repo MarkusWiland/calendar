@@ -1,8 +1,42 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import {
+  add,
+  eachDayOfInterval,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isEqual,
+  isSameMonth,
+  isToday,
+  parse,
+  startOfToday,
+  startOfWeek,
+} from "date-fns";
+import { useState } from "react";
 export default function Home() {
+  const today = startOfToday();
+  const [selectedDay, setSelectedDay] = useState(today);
+  const [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
+  const firstDayOfCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
+  let days = eachDayOfInterval({
+    start: startOfWeek(firstDayOfCurrentMonth, { weekStartsOn: 1 }),
+    end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
+  });
+  console.log("days", days);
+  console.log("selectedDay", selectedDay);
+  console.log("currentMonth", currentMonth);
+  console.log("firstDayOfCurrentMonth", firstDayOfCurrentMonth);
+  console.log("today", today);
+  function prevMonth() {
+    const firstDayPrevMonth = add(firstDayOfCurrentMonth, { months: -1 });
+    setCurrentMonth(format(firstDayPrevMonth, "MMM-yyyy"));
+  }
+  function nextMonth() {
+    let firstDayNextMonth = add(firstDayOfCurrentMonth, { months: 1 });
+    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -12,58 +46,38 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
+        <h3>{format(firstDayOfCurrentMonth, "MMMM yyyy")}</h3>
+        <button onClick={prevMonth}>Prev</button>
+        <button onClick={nextMonth}>Next</button>
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          <div>M</div>
+          <div>T</div>
+          <div>O</div>
+          <div>T</div>
+          <div>F</div>
+          <div>L</div>
+          <div>S</div>
+        </div>
+        <div className={styles.grid}>
+          {days.map((day, dayInd) => (
+            <div key={day.toString()}>
+              <button
+                className={`${
+                  !isEqual(day, selectedDay) &&
+                  !isToday(day) &&
+                  isSameMonth(day, firstDayOfCurrentMonth) &&
+                  "bg-black" &&
+                  isEqual(day, selectedDay) &&
+                  isToday(day) &&
+                  "bg-red"
+                } `}
+              >
+                {format(day, "d")}
+              </button>
+            </div>
+          ))}
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
-  )
+  );
 }

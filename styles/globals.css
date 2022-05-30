@@ -14,3 +14,10 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.bg-red {
+  background-color: #f44336;
+}
+.bg-black {
+  background-color: #000000;
+}
