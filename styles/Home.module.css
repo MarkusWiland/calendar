@@ -2,3 +2,10 @@
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
+.grid > * {
+  margin: 0 auto;
+}
+.main {
+  max-width: 300px;
+  width:100%;
+}

@@ -6,13 +6,11 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
 
 * {
   box-sizing: border-box;
+  padding: 0;
+  margin:0;
 }
 
 .bg-red {
@@ -20,4 +18,25 @@ a {
 }
 .bg-black {
   background-color: #000000;
+}
+.text-white {
+  color:red;
+}
+.button {
+  border:none;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  width:30px; 
+  text-decoration: none;
+  display: inline-block;
+  height:30px;
+}
+.button:hover {
+  background-color: gray;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0.5rem;
 }

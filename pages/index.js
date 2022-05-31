@@ -15,6 +15,9 @@ import {
   startOfWeek,
 } from "date-fns";
 import { useState } from "react";
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 export default function Home() {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
@@ -22,8 +25,17 @@ export default function Home() {
   const firstDayOfCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
   let days = eachDayOfInterval({
     start: startOfWeek(firstDayOfCurrentMonth, { weekStartsOn: 1 }),
-    end: endOfWeek(endOfMonth(firstDayOfCurrentMonth)),
+    end: endOfWeek(endOfMonth(firstDayOfCurrentMonth), { weekStartsOn: 1 }),
   });
+  console.log(
+    "startofweek",
+    startOfWeek(firstDayOfCurrentMonth, { weekStartsOn: 1 })
+  );
+  console.log("endofmonth", endOfMonth(firstDayOfCurrentMonth));
+  console.log(
+    "endOfWeek",
+    endOfWeek(firstDayOfCurrentMonth, { weekStartsOn: 1 })
+  );
   console.log("days", days);
   console.log("selectedDay", selectedDay);
   console.log("currentMonth", currentMonth);
@@ -46,9 +58,15 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h3>{format(firstDayOfCurrentMonth, "MMMM yyyy")}</h3>
-        <button onClick={prevMonth}>Prev</button>
-        <button onClick={nextMonth}>Next</button>
+        <div className="flex">
+          <div>
+            <h3>{format(firstDayOfCurrentMonth, "MMMM yyyy")}</h3>
+          </div>
+          <div>
+            <button onClick={prevMonth}>Prev</button>
+            <button onClick={nextMonth}>Next</button>
+          </div>
+        </div>
         <div className={styles.grid}>
           <div>M</div>
           <div>T</div>
@@ -60,17 +78,19 @@ export default function Home() {
         </div>
         <div className={styles.grid}>
           {days.map((day, dayInd) => (
-            <div key={day.toString()}>
+            <div key={day.toString()} className={styles.gridBox}>
               <button
-                className={`${
-                  !isEqual(day, selectedDay) &&
-                  !isToday(day) &&
-                  isSameMonth(day, firstDayOfCurrentMonth) &&
-                  "bg-black" &&
+                onClick={() => setSelectedDay(day)}
+                className={classNames(
+                  isEqual(day, selectedDay) && "text-white",
                   isEqual(day, selectedDay) &&
-                  isToday(day) &&
-                  "bg-red"
-                } `}
+                    isToday(day) &&
+                    "bg-red" &&
+                    isEqual(day, selectedDay) &&
+                    !isToday(day) &&
+                    "bg-black",
+                  "button"
+                )}
               >
                 {format(day, "d")}
               </button>
